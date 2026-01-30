@@ -31,7 +31,7 @@ class CouponController extends Controller
         $create = Coupon::create($data);
         
         if($create) {
-            return redirect()->route("admin.coupon.index")->with("Berhasil menambahkan coupon");
+            return redirect()->route("admin.coupon.index")->with("success", "Berhasil menambahkan coupon");
         }
     }
     
@@ -49,7 +49,7 @@ class CouponController extends Controller
         $update = $coupon->update($data);
         
         if($update) {
-            return redirect()->route("admin.coupon.index")->with("Berhasil mengedit coupon");
+            return redirect()->route("admin.coupon.index")->with("success", "Berhasil mengedit coupon");
         }
     }
     
@@ -58,7 +58,7 @@ class CouponController extends Controller
         $delete = $coupon->delete();
         
         if($delete) {
-            return redirect()->route("admin.coupon.index")->with("Berhasil menghapus coupon");
+            return redirect()->route("admin.coupon.index")->with("success", "Berhasil menghapus coupon");
         }
     }
 }

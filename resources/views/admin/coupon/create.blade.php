@@ -1,6 +1,6 @@
 @extends("layout.admin-layout")
 
-@section("main")
+@section("content")
 
 <div class="container">
     <div class="py-5">
@@ -13,30 +13,45 @@
                     </div>
                     <div class="pb-3">
                         <label for="code" class="form-label">code</label>
-                        <input type="text" id="code" name="code" class="form-control">
+                        <input type="text" id="code" name="code" class="form-control @error("code") is-invalid @enderror">
+                        @error("code")
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                     <div class="pb-3">
                         <label for="discount_type" class="form-label">Discount Type</label>
-                        <select name="discount_type" id="discount_type" class="form-select">
+                        <select name="discount_type" id="discount_type" class="form-select @error("discount_type") is-invalid @enderror">
                             <option value="flat">flat</option>
                             <option value="precent">precent</option>
                         </select>
+                        @error("discount_type")
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                     <div class="pb-3">
                         <label for="discount_value" class="form-label">discount value</label>
-                        <input type="number" id="discount_value" name="discount_value" class="form-control">
+                        <input type="number" id="discount_value" name="discount_value" class="form-control @error("discount_value") is-invalid @enderror">
+                        @error("discount_value")
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
                     </div>
                     <div class="pb-3">
                         <label for="is_active" class="form-label">Status</label>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="is_active" id="true" value="1">
+                            <input class="form-check-input" type="radio" checked name="is_active" id="true" value="1">
                             <label class="form-check-label" for="true">
                                 Aktif
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="is_active" id="false"
-                                value="0">
+                            value="0">
                             <label class="form-check-label" for="false">
                                 Tidak aktif
                             </label>

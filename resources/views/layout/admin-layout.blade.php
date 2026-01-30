@@ -14,6 +14,7 @@
             <a href="{{ route("admin.dashboard") }}" class="btn btn-light text-start">Dashboard</a>
             <a href="{{ route("admin.event.index") }}" class="btn btn-light text-start">Event</a>
             <a href="{{ route("admin.coupon.index") }}" class="btn btn-light text-start">Coupon</a>
+            <a href="{{ route("admin.user.index") }}" class="btn btn-light text-start">User</a>
         </div>
     </aside>
 

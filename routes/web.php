@@ -4,11 +4,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
-use App\Http\Controllers\Admin\EventController;
-
-use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\User\DashboardController as UserDashboard;
+
+use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\UserController as AdminUser;
 
 Route::controller(AuthController::class)
 ->group(function() {
@@ -62,6 +63,21 @@ Route::middleware("auth:admin")
         
         Route::delete("/delete/{coupon}", "delete")->name("delete");
     }); 
+
+    Route::controller(AdminUser::class)
+    ->prefix("/user")
+    ->name("user.")
+    ->group(function() {
+        Route::get("/index", "index")->name("index");
+        
+        Route::get("/create", "create")->name("create");
+        Route::post("/store", "store")->name("store");
+        
+        Route::get("/edit/{user}", "edit")->name("edit");
+        Route::put("/update/{user}", "update")->name("update");
+        
+        Route::delete("/delete/{user}", "delete")->name("delete");
+    }); 
 });
      
-    Route::get("/user/dashboard", [UserDashboard::class, "index"])->name("user.dashboard")->middleware("auth:user");
+Route::get("/user/dashboard", [UserDashboard::class, "index"])->name("user.dashboard")->middleware("auth:user");
