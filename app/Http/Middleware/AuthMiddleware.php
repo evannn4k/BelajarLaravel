@@ -19,7 +19,7 @@ class AuthMiddleware
         if(Auth::guard("admin")->check()) {
             return redirect()->route("admin.dashboard");
         } else if(Auth::guard("user")->check()) {
-            return redirect()->route("user.dashboard");
+            return redirect()->route("index");
         }
 
         return $next($request);

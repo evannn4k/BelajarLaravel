@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
+use App\Models\Event;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        return view("user.index");
+        $events = Event::where("status", true)->get();
+        
+        return view("user.index", [
+            "events" => $events
+        ]);
     }
 }

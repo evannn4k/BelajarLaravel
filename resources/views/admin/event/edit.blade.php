@@ -32,7 +32,7 @@
                         @enderror
                     </div>
                     <div class="pb-3">
-                        <label for="category" class="form-label"></label>
+                        <label for="category" class="form-label">Category</label>
                         <select name="category" id="category" class="form-select @error("category") is-invalid @enderror">
                             <option value="5K" {{ $event->category == '5K' ? 'selected' : '' }}>5K</option>
                             <option value="10K" {{ $event->category == '10K' ? 'selected' : '' }}>10K</option>

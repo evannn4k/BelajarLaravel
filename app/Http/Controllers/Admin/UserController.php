@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\AdminUserCreateRequest;
-use App\Http\Requests\Admin\AdminUserUpdateRequest;
 
 class UserController extends Controller
 {
@@ -24,9 +22,14 @@ class UserController extends Controller
         return view("admin.user.create");
     }
 
-    public function store(AdminUserCreateRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            "name" => "required",
+            "email" => "required|unique:users,email",
+            "password" => "required|confirmed|min:8",
+            "role" => "required",
+        ]);
 
         $create = User::create($data);
 

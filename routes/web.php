@@ -4,16 +4,18 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
-use App\Http\Controllers\User\DashboardController as UserDashboard;
-
-use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\CouponController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+
+use App\Http\Controllers\User\EventController as PublicEvent;
+
 use App\Http\Controllers\Admin\UserController as AdminUser;
+use App\Http\Controllers\Admin\EventController as AdminEvent;
+use App\Http\Controllers\User\DashboardController as UserDashboard;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 
 Route::controller(AuthController::class)
 ->group(function() {
-    Route::get("/", "login")->name("login")->middleware("guestMiddleware");
+    Route::get("/login", "login")->name("login")->middleware("guestMiddleware");
     Route::get("/register", "register")->name("register")->middleware("guestMiddleware");
 
     Route::get("/logout", "logout")->name("logout");
@@ -34,11 +36,11 @@ Route::middleware("auth:admin")
     });
     
     
-    Route::controller(EventController::class)
+    Route::controller(AdminEvent::class)
     ->prefix("/event")
     ->name("event.")
     ->group(function() {
-        Route::get("/index", "index")->name("index");
+        Route::get("/", "index")->name("index");
         
         Route::get("/create", "create")->name("create");
         Route::post("/store", "store")->name("store");
@@ -53,7 +55,7 @@ Route::middleware("auth:admin")
     ->prefix("/coupon")
     ->name("coupon.")
     ->group(function() {
-        Route::get("/index", "index")->name("index");
+        Route::get("/", "index")->name("index");
         
         Route::get("/create", "create")->name("create");
         Route::post("/store", "store")->name("store");
@@ -68,7 +70,7 @@ Route::middleware("auth:admin")
     ->prefix("/user")
     ->name("user.")
     ->group(function() {
-        Route::get("/index", "index")->name("index");
+        Route::get("/", "index")->name("index");
         
         Route::get("/create", "create")->name("create");
         Route::post("/store", "store")->name("store");
@@ -80,4 +82,12 @@ Route::middleware("auth:admin")
     }); 
 });
      
-Route::get("/user/dashboard", [UserDashboard::class, "index"])->name("user.dashboard")->middleware("auth:user");
+Route::controller(PublicEvent::class)
+->group(function() {
+    Route::get("/", "index")->name("index");
+    
+    Route::get("/detail/{slug}", "detail")->name("detail");
+    Route::post("/regist-event", "registEvent")->name("regist.event");
+});
+
+// Route::get("/user/dashboard", "index")->name("user.dashboard")->middleware("auth:user");

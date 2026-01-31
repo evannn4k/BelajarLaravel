@@ -30,7 +30,7 @@
                         @enderror
                     </div>
                     <div class="pb-3">
-                        <label for="category" class="form-label"></label>
+                        <label for="category" class="form-label">Category</label>
                         <select name="category" id="category" class="form-select @error("category") is-invalid @enderror">
                             <option value="5K">5K</option>
                             <option value="10K">10K</option>

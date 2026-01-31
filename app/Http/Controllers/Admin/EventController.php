@@ -6,8 +6,6 @@ use App\Models\Event;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\AdminEventCreateRequest;
-use App\Http\Requests\Admin\AdminEventUpdateRequest;
 
 class EventController extends Controller
 {
@@ -25,9 +23,16 @@ class EventController extends Controller
         return view("admin.event.create");
     }
 
-    public function store(AdminEventCreateRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            "title" => "required",
+            "description" => "required",
+            "category" => "required|in:5K,10K,Marathon",
+            "price" => "required|min:1",
+            "quota" => "required|min:1",
+            "status" => "required",
+        ]);
 
         $slug = Str::slug($data["title"]);
         
@@ -59,9 +64,16 @@ class EventController extends Controller
         return view("admin.event.edit", ["event" => $event]);
     }
     
-    public function update(AdminEventUpdateRequest $request, $event)
+    public function update(Request $request, $event)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            "title" => "required",
+            "description" => "required",
+            "category" => "required|in:5K,10K,Marathon",
+            "price" => "required|min:1",
+            "quota" => "required|min:1",
+            "status" => "required",
+        ]);
         
         $event = Event::where("slug", $event)->first();
         

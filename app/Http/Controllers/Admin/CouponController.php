@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Coupon;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\AdminCouponCreateRequest;
-use App\Http\Requests\Admin\AdminCouponUpdateRequest;
 
 class CouponController extends Controller
 {
@@ -24,9 +23,14 @@ class CouponController extends Controller
         return view("admin.coupon.create");
     }
 
-    public function store(AdminCouponCreateRequest $request)
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $data = $request->validate([
+            "code" => "required|unique:coupons,code",
+            "discount_type" => "required",
+            "discount_value" => "required",
+            "is_active" => "required",
+        ]);
         
         $create = Coupon::create($data);
         
@@ -42,10 +46,23 @@ class CouponController extends Controller
         ]); 
     }
 
-    public function update(AdminCouponUpdateRequest $request, Coupon $coupon) 
+    public function update(Request $request, Coupon $coupon) 
     {
-        $data = $request->validated();
-
+        $data = $request->validate([
+            'code' => 'required|unique:coupons,code,' . $coupon->id,
+            // 'code' => ['required', Rule::unique("coupons", "code")->ignore($coupon)],
+            'discount_type' => 'required',
+            'discount_value' => 'required',
+            'is_active' => 'required',
+        ]);
+        
+        // 'code' => [
+        //     'required',
+        //     Rule::unique('coupons', 'code')->ignore(
+        //         $this->route('admin.coupon.update')
+        //     ),
+        // ],
+        
         $update = $coupon->update($data);
         
         if($update) {

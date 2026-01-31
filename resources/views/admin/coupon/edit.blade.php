@@ -64,6 +64,7 @@
                         </div>
                     </div>
                     <div class="pb-3">
+                        <a href="{{ route("admin.coupon.index") }}" class="btn btn-danger">Kembali</a>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>

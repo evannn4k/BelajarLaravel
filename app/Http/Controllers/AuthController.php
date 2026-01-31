@@ -29,7 +29,7 @@ class AuthController extends Controller
             return redirect()->intended("admin/dashboard");
         } else if(Auth::guard("user")->attempt(["email" => $data["email"], "password" => $data["password"], "role" => "user"])) {
             $request->session()->regenerate();
-            return redirect()->intended("user/dashboard");
+            return redirect()->intended("/");
         } else {
             return redirect()->route("login")->with("error", "Email atau password salah");
         }
@@ -60,6 +60,6 @@ class AuthController extends Controller
             Auth::guard("user")->logout();
         }
 
-        return redirect()->route("login");
+        return redirect()->route("index");
     }
 }
