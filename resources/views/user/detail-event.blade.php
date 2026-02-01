@@ -58,6 +58,7 @@
                                                 <input type="text" class="form-control" name="code" id="code">
                                             </div>
                                             <div class="col-md-12">
+                                                <a href="{{ route("index") }}" class="btn btn-danger">Kembali</a>
                                                 <button class="btn btn-primary">Daftar</button>
                                             </div>
                                         </div>

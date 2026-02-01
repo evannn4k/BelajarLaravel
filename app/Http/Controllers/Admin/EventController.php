@@ -6,6 +6,7 @@ use App\Models\Event;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Registration;
 
 class EventController extends Controller
 {
@@ -15,6 +16,15 @@ class EventController extends Controller
 
         return view("admin.event.index", [
             "events" => $events
+        ]);
+    }
+
+    public function detail($slug)
+    {
+        $event = Event::where("slug", $slug)->first();
+
+        return view("admin.event.detail", [
+            "event" => $event
         ]);
     }
 
@@ -101,5 +111,28 @@ class EventController extends Controller
         if($delete) {
             return redirect()->route("admin.event.index")->with("success", "Berhasil menghapus event");
         }
+    }
+
+    public function registerApproved($id)
+    {
+        Registration::findOrFail($id)->update([
+            "status" => "Approved"
+        ]);
+    
+        return back();
+    }
+
+    public function registerDelete($id)
+    {
+        Registration::findOrFail($id)->delete();
+
+        return back();
+    }
+
+    public function image($image)
+    {
+        return view("admin.image", [
+            "image" => $image
+        ]);
     }
 }

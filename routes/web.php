@@ -41,6 +41,7 @@ Route::middleware("auth:admin")
     ->name("event.")
     ->group(function() {
         Route::get("/", "index")->name("index");
+        Route::get("/detail/{slug}", "detail")->name("detail");
         
         Route::get("/create", "create")->name("create");
         Route::post("/store", "store")->name("store");
@@ -49,7 +50,10 @@ Route::middleware("auth:admin")
         Route::put("/update/{event}", "update")->name("update");
         
         Route::delete("/delete/{event}", "delete")->name("delete");
-    });
+
+        Route::put("/register/approved/{id}", "registerApproved")->name("register.approved");
+        Route::delete("/register/delete/{id}", "registerDelete")->name("register.delete");
+        });
     
     Route::controller(CouponController::class)
     ->prefix("/coupon")
@@ -85,9 +89,12 @@ Route::middleware("auth:admin")
 Route::controller(PublicEvent::class)
 ->group(function() {
     Route::get("/", "index")->name("index");
+    Route::get("/history", "history")->name("history");
     
     Route::get("/detail/{slug}", "detail")->name("detail");
     Route::post("/regist-event", "registEvent")->name("regist.event");
-});
+    Route::get("/payment-event/{registration}", "paymentEvent")->name("payment.event");
+    Route::put("/payment-proof/{registration}", "paymentProof")->name("payment.proof");
+    });
 
 // Route::get("/user/dashboard", "index")->name("user.dashboard")->middleware("auth:user");

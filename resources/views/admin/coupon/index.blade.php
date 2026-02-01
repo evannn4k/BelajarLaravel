@@ -23,13 +23,18 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $coupon->code }}</td>
                     <td>{{ $coupon->discount_type }}</td>
-                    <td>{{ $coupon->discount_value }}</td>
+                    <td>
+                        @if ($coupon->discount_type == "flat")
+                        Rp. {{ number_format($coupon->discount_value) }}
+                        @else
+                        {{ number_format($coupon->discount_value) }}%
+                        @endif
+                    </td>
                     <td>{{ $coupon->is_active }}</td>
                     <td>
                         <div class="d-flex gap-1">
                             <a href="{{ route('admin.coupon.edit', $coupon->id) }}"
                                 class="btn btn-success btn-sm">edit</a>
-                            {{-- <a href="{{ route("coupon.edit", $coupon->slug) }}" class="btn btn-danger btn-sm">delete</a> --}}
                             <form action="{{ route('admin.coupon.delete', $coupon->id) }}" method="post">
                                 @csrf
                                 @method('delete')

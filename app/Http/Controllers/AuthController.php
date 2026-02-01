@@ -48,7 +48,7 @@ class AuthController extends Controller
             Auth::guard("user")->login($user);
             $request->session()->regenerate();
             
-            return redirect()->intended("user/dashboard");
+            return redirect()->intended("/");
         }
     }
 

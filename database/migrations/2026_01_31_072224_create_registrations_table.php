@@ -18,6 +18,7 @@ return new class extends Migration
             $table->bigInteger("coupon_id")->references("id")->on("coupons")->onDelete("cascade")->nullable();
             $table->enum("status", ["pending", "approved"]);
             $table->integer("final_price");
+            $table->string("payment_proof")->nullable();
             $table->timestamps();
         });
     }
