@@ -38,7 +38,7 @@
                             <td>
                                 @if ($registration->coupon)
                                 @if ($registration->coupon->discount_type == "flat")
-                                Rp. {{ $registration->coupon->discount_value }}
+                                Rp. {{ number_format($registration->coupon->discount_value) }}
                                 @else
                                 {{ $registration->coupon->discount_value }}%
                                 @endif

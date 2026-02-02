@@ -11,5 +11,10 @@ class Event extends Model
     public function registration()
     {
         return $this->hasMany(Registration::class);
-    } 
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(CategoryEvent::class);
+    }
 }

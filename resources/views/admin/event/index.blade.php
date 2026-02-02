@@ -24,10 +24,10 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $event->title }}</td>
-                    <td>{{ $event->category }}</td>
-                    <td>{{ $event->description }}</td>
-                    <td>{{ $event->price }}</td>
-                    <td>{{ $event->quota }}</td>
+                    <td>{{ $event->category->name }}</td>
+                    <td>{{ Str::limit($event->description, 50) }}</td>
+                    <td>Rp. {{ number_format($event->price) }}</td>
+                    <td>{{ number_format($event->quota) }}</td>
                     <td>
                         @if ($event->status)
                         <div class="badge text-bg-primary">

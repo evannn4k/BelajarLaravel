@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger("user_id")->references("id")->on("users")->onDelete("cascade");
-            $table->bigInteger("event_id")->references("id")->on("events")->onDelete("cascade");
-            $table->bigInteger("coupon_id")->references("id")->on("coupons")->onDelete("cascade")->nullable();
+            $table->foreignId("user_id")->constrained("users", "id");
+            $table->foreignId("event_id")->constrained("events", "id");
+            $table->foreignId("coupon_id")->nullable()->constrained("coupons", "id");
             $table->enum("status", ["pending", "approved"]);
             $table->integer("final_price");
             $table->string("payment_proof")->nullable();

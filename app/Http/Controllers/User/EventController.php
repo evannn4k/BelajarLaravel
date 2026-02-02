@@ -53,6 +53,10 @@ class EventController extends Controller
         $event = Event::findOrFail($request->event_id);
         $user_id = Auth::guard("user")->user()->id;
 
+        if (!$event->reg_open_at <= now() && !$event->reg_close_at >= now()) {
+            return redirect()->back()->withErrors("error", "Pendaftaran sudah berakhir");
+        };
+
         if ($event->quota >= 0) {
             $coupon = Coupon::where("code", $request->code)->first();
 
@@ -61,10 +65,12 @@ class EventController extends Controller
             if ($coupon) {
                 if ($coupon->discount_type == "flat") {
                     $discount = $final_price - $coupon->discount_value;
+
                     $final_price = $discount;
                 } else {
                     $precentDiscount = $final_price * $coupon->discount_value / 100;
                     $dicsount = $final_price - $precentDiscount;
+
                     $final_price = $dicsount;
                 }
             }
@@ -78,6 +84,7 @@ class EventController extends Controller
             ];
 
             $quota = $event->quota - 1;
+            
             $event->update([
                 "quota" => $quota
             ]);

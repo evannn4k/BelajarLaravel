@@ -6,10 +6,11 @@ use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\Admin\CouponController;
 
-use App\Http\Controllers\User\EventController as PublicEvent;
+use App\Http\Controllers\Admin\CategoryEventController;
 
 use App\Http\Controllers\Admin\UserController as AdminUser;
 use App\Http\Controllers\Admin\EventController as AdminEvent;
+use App\Http\Controllers\User\EventController as PublicEvent;
 use App\Http\Controllers\User\DashboardController as UserDashboard;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 
@@ -55,6 +56,21 @@ Route::middleware("auth:admin")
         Route::delete("/register/delete/{id}", "registerDelete")->name("register.delete");
         });
     
+    Route::controller(CategoryEventController::class)
+    ->prefix("/category-event")
+    ->name("category-event.")
+    ->group(function() {
+        Route::get("/", "index")->name("index");
+        
+        Route::get("/create", "create")->name("create");
+        Route::post("/store", "store")->name("store");
+        
+        Route::get("/edit/{category}", "edit")->name("edit");
+        Route::put("/update/{category}", "update")->name("update");
+        
+        Route::delete("/delete/{category}", "delete")->name("delete");
+    }); 
+
     Route::controller(CouponController::class)
     ->prefix("/coupon")
     ->name("coupon.")

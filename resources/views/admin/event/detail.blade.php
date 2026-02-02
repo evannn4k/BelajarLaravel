@@ -6,12 +6,15 @@
         <div class="p-4 rounded shadow d-flex flex-column gap-4">
 
             <div class="">
+                <div class="">
+                    <img src="{{ asset("storage/images/event/$event->image") }}" alt="" class="rounded-4 shadow" style="max-width= 500px">
+                </div>
                 <div class="h3">{{ $event->title }}</div>
                 <table class="table table-borderless mt-2">
                     <tr>
                         <td class="p-0">Category</td>
                         <td class="p-0">:</td>
-                        <td class="p-0">{{ $event->category }}</td>
+                        <td class="p-0">{{ $event->category->name }}</td>
                     </tr>
                     <tr>
                         <td class="p-0">Price</td>
@@ -33,6 +36,21 @@
                             <div class="badge text-bg-danger">Tidak Tersedia</div>
                             @endif
                         </td>
+                    </tr>
+                    <tr>
+                        <td class="p-0">Event diselenggarakan</td>
+                        <td class="p-0">:</td>
+                        <td class="p-0">{{ date("d-m-Y", strtotime($event->event_date)) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="p-0">Pendaftaran dimulai</td>
+                        <td class="p-0">:</td>
+                        <td class="p-0">{{ date("d-m-Y i-h", strtotime($event->reg_open_at)) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="p-0">Pendaftaran ditutup</td>
+                        <td class="p-0">:</td>
+                        <td class="p-0">{{ date("d-m-Y i-h", strtotime($event->reg_close_at)) }}</td>
                     </tr>
                 </table>
                 <div class="">{{ $event->description }}</div>
@@ -87,7 +105,7 @@
                         </td>
                         <td>{{ $registration->created_at->diffForHumans() }}</td>
                         <td>
-                            @if ($registration->status == "pending")
+                            @if ($registration->status == "pending" && $registration->payment_proof)
                             <form action="{{ route("admin.event.register.approved", $registration->id) }}" method="POST">
                                 @csrf
                                 @method("put")
