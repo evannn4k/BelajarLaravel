@@ -12,7 +12,7 @@
                             <h5>Tambah kategori baru</h5>
                         </div>
                         <div class="pb-3">
-                            <label for="name" class="form-label">Name</label>
+                            <label for="name" class="form-label">Nama</label>
                             <input type="text" id="name" name="name"
                                 class="form-control @error('name') is-invalid @enderror" value="{{ $category->name }}">
                             @error('name')
@@ -22,8 +22,8 @@
                             @enderror
                         </div>
                         <div class="pb-3">
-                            <a href="{{ route('admin.category-event.index') }}" class="btn btn-danger">Kembali</a>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <a href="{{ route('admin.category-event.index') }}" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Kembali</a>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-disk"></i> Simpan</button>
                         </div>
                     </form>
                 </div>

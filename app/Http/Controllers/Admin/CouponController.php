@@ -30,6 +30,8 @@ class CouponController extends Controller
             "discount_type" => "required",
             "discount_value" => "required",
             "is_active" => "required",
+            "open_at" => "required",
+            "closed_at" => "required",
         ]);
         
         $create = Coupon::create($data);
@@ -54,6 +56,8 @@ class CouponController extends Controller
             'discount_type' => 'required',
             'discount_value' => 'required',
             'is_active' => 'required',
+            'open_at' => 'required',
+            'closed_at' => 'required',
         ]);
         
         // 'code' => [

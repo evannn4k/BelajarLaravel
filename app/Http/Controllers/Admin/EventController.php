@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\CategoryEvent;
+use App\Models\Category;
 use App\Models\Event;
 use App\Models\Registration;
 use Carbon\Traits\Timestamp;
@@ -25,6 +25,10 @@ class EventController extends Controller
     public function detail($slug)
     {
         $event = Event::where('slug', $slug)->first();
+        
+        if(!$event) {
+            abort(404);
+        }
 
         return view('admin.event.detail', [
             'event' => $event,
@@ -33,7 +37,7 @@ class EventController extends Controller
 
     public function create()
     {
-        $categories = CategoryEvent::all();
+        $categories = Category::all();
         return view('admin.event.create', [
             "categories" => $categories
         ]);
@@ -88,7 +92,7 @@ class EventController extends Controller
             return abort(404);
         }
         
-        $categories = CategoryEvent::all();
+        $categories = Category::all();
         return view('admin.event.edit', [
             "categories" => $categories,
             'event' => $event
@@ -163,17 +167,40 @@ class EventController extends Controller
     public function registerDelete($id)
     {
         $registration = Registration::findOrFail($id);
-
+        
         if ($registration->payment_proof) {
             $path = "images/payment/";
             
             Storage::delete($path . $registration->payment_proof);
         }
-
+        
+        $event = $registration->event;
+        
+        $event->update([
+            "quota" => $event->quota + 1
+        ]);
+        
         $registration->delete();
-
+        
         if ($registration) {
             return back();
         }
+    }
+    
+    public function registerRejected($id)
+    {
+        $registration = Registration::findOrFail($id);
+
+        $registration->update([
+            "status" => "rejected"
+        ]);
+
+        $event = $registration->event;
+
+        $event->update([
+            "quota" => $event->quota + 1
+        ]);
+
+        return redirect()->back();
     }
 }   

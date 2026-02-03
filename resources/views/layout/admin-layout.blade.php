@@ -26,7 +26,7 @@
                 </div>
             </header>
 
-            <div class="overflow-auto d-flex flex-fill">
+            <div class="overflow-auto flex-fill">
 
                 @yield('content')
 

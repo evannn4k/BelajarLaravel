@@ -17,6 +17,8 @@ return new class extends Migration
             $table->enum("discount_type", ["flat", "precent"]);
             $table->integer("discount_value");
             $table->boolean("is_active");
+            $table->dateTime("open_at");
+            $table->dateTime("closed_at");
             $table->timestamps();
         });
     }

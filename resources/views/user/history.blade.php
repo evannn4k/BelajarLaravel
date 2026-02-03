@@ -8,36 +8,42 @@
                     <thead class="table-primary">
                         <tr>
                             <th>#</th>
+                            <th>Code</th>
                             <th>Nama Event</th>
                             <th>Status</th>
                             <th>Pada</th>
-                            <th>Bayar</th>
+                            <th>Detail</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($user->registration as $registration)
+                        @forelse ($histories as $registration)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                <td>{{ $registration->code_registration ?? "-" }}</td>
                                 <td>{{ $registration->event->title }}</td>
                                 <td>
                                     @if ($registration->status == 'approved')
-                                        <div class="badge text-bg-primary">
-                                            {{ $registration->status }}
+                                        <div class="badge text-bg-success">
+                                            Sudah dibayar
+                                        </div>
+                                    @elseif($registration->status == 'rejected')
+                                        <div class="badge text-bg-danger">
+                                            Ditolak
+                                        </div>
+                                    @elseif($registration->status == 'pending' && !$registration->payment_proof)
+                                        <div class="badge text-bg-secondary">
+                                            Belum dibayar
                                         </div>
                                     @else
-                                        <div class="badge text-bg-danger">
-                                            {{ $registration->status }}
+                                        <div class="badge text-bg-warning">
+                                            Sedang validasi
                                         </div>
                                     @endif
                                 </td>
                                 <td>{{ $registration->created_at->diffForHumans() }}</td>
                                 <td>
-                                    @if (!$registration->payment_proof)
-                                        <a href="{{ route('payment.event', $registration->id) }}"
-                                            class="btn btn-success btn-sm">Bayar</a>
-                                    @else
-                                        <div>Sudah dibayar</div>
-                                    @endif
+                                    <a href="{{ route('payment.event', $registration->code_registration ?? 1) }}"
+                                        class="btn btn-primary btn-sm">Lihat Detail</a>
                                 </td>
                             </tr>
                         @empty
@@ -45,6 +51,7 @@
                         @endforelse
                     </tbody>
                 </table>
+                {{ $histories->links() }}
             </div>
         </div>
     </div>

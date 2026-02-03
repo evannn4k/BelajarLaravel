@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\CategoryEvent;
-use Illuminate\Http\Request;
+use App\Models\Category;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class CategoryEventController extends Controller
+class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = CategoryEvent::all();
+        $categories = Category::all();
 
         return view('admin.category.index', [
             'categories' => $categories,
@@ -33,23 +33,23 @@ class CategoryEventController extends Controller
 
         $counter = 1;
 
-        while (CategoryEvent::where('slug', $slug)->exists()) {
+        while (Category::where('slug', $slug)->exists()) {
             $slug = $slug.'-'.$counter;
             $counter++;
         }
 
         $data['slug'] = $slug;
 
-        $category = CategoryEvent::create($data);
+        $category = Category::create($data);
 
         if ($category) {
             return redirect()->route('admin.category-event.index')->with('success', 'Berhasil menambahkan category');
         }
     }
     
-    public function edit($category)
+    public function edit($slug)
     {
-        $category = CategoryEvent::where('slug', $category)->first();
+        $category = Category::where('slug', $slug)->first();
         
         if (! $category) {
             return abort(404);
@@ -58,17 +58,17 @@ class CategoryEventController extends Controller
         return view('admin.category.edit', ['category' => $category]);
     }
     
-    public function update(Request $request, $category)
+    public function update(Request $request, $slug)
     {
         $data = $request->validate([
             'name' => 'required',
         ]);
         
-        $category = CategoryEvent::where("slug", $category)->first();
+        $category = Category::where("slug", $slug)->first();
         
         $slug = Str::slug($data['name']);
         $counter = 1;
-        while (CategoryEvent::where('slug', $slug)->where('id', '!=', $category->id)->exists()) {
+        while (Category::where('slug', $slug)->where('id', '!=', $category->id)->exists()) {
             $slug = $slug.'-'.$counter;
             $counter++;
         }
@@ -79,6 +79,17 @@ class CategoryEventController extends Controller
         
         if($update) {
             return redirect()->route('admin.category-event.index')->with('success', 'Berhasil mengubah category');
+        }
+    }
+    
+    public function delete($slug)
+    {
+        $category = Category::where("slug", $slug)->first(); 
+        
+        $delete = $category->delete();
+        
+        if($delete) {            
+            return redirect()->route('admin.category-event.index')->with('success', 'Berhasil menghapus category');
         }
     }
 }

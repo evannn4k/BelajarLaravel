@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId("user_id")->constrained("users", "id");
             $table->foreignId("event_id")->constrained("events", "id");
             $table->foreignId("coupon_id")->nullable()->constrained("coupons", "id");
-            $table->enum("status", ["pending", "approved"]);
+            $table->enum("status", ["pending", "approved", "rejected"]);
             $table->integer("final_price");
             $table->string("payment_proof")->nullable();
             $table->timestamps();

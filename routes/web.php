@@ -1,18 +1,16 @@
 <?php
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\Admin\CouponController;
 
-use App\Http\Controllers\Admin\CategoryEventController;
-
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController as AdminUser;
 use App\Http\Controllers\Admin\EventController as AdminEvent;
 use App\Http\Controllers\User\EventController as PublicEvent;
-use App\Http\Controllers\User\DashboardController as UserDashboard;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\User\ProfilController;
 
 Route::controller(AuthController::class)
 ->group(function() {
@@ -54,21 +52,22 @@ Route::middleware("auth:admin")
 
         Route::put("/register/approved/{id}", "registerApproved")->name("register.approved");
         Route::delete("/register/delete/{id}", "registerDelete")->name("register.delete");
+        Route::put("/register/rejected/{registration}", "registerRejected")->name("register.rejected");
         });
     
-    Route::controller(CategoryEventController::class)
+    Route::controller(CategoryController::class)
     ->prefix("/category-event")
     ->name("category-event.")
-    ->group(function() {
+    ->group(function() {    
         Route::get("/", "index")->name("index");
         
         Route::get("/create", "create")->name("create");
         Route::post("/store", "store")->name("store");
         
-        Route::get("/edit/{category}", "edit")->name("edit");
-        Route::put("/update/{category}", "update")->name("update");
+        Route::get("/edit/{slug}", "edit")->name("edit");
+        Route::put("/update/{slug}", "update")->name("update");
         
-        Route::delete("/delete/{category}", "delete")->name("delete");
+        Route::delete("/delete/{slug}", "delete")->name("delete");
     }); 
 
     Route::controller(CouponController::class)
@@ -99,17 +98,29 @@ Route::middleware("auth:admin")
         Route::put("/update/{user}", "update")->name("update");
         
         Route::delete("/delete/{user}", "delete")->name("delete");
-    }); 
+    });
 });
-     
+
+Route::controller(ProfilController::class)
+->prefix("/profil")
+->name("profil.")
+->group(function() {
+    Route::get("/", "profil")->name("index");
+    Route::put("/update/{id}", "update")->name("update");
+});
+
 Route::controller(PublicEvent::class)
 ->group(function() {
     Route::get("/", "index")->name("index");
-    Route::get("/history", "history")->name("history");
     
+    Route::get("/event", "event")->name("event");
     Route::get("/detail/{slug}", "detail")->name("detail");
+
+    Route::get("/history", "history")->name("history");
+    Route::get("/category/{slug}", "category")->name("category");
+    
     Route::post("/regist-event", "registEvent")->name("regist.event");
-    Route::get("/payment-event/{registration}", "paymentEvent")->name("payment.event");
+    Route::get("/payment-event/{code_registration}", "paymentEvent")->name("payment.event");
     Route::put("/payment-proof/{registration}", "paymentProof")->name("payment.proof");
     });
 

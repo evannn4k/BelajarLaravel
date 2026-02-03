@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Coupon;
+use App\Models\Category;
+use Illuminate\Support\Str;
 use App\Models\Registration;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,31 +17,55 @@ class EventController extends Controller
 {
     public function index()
     {
-        $events = Event::where('status', true)->get();
-
+        $events = Event::where('status', true)->limit(4)->orderBy("created_at")->get();
+    
         foreach ($events as $event) {
             $total = $event->registration->count();
             $event->totalResgist = $total;
         }
-
+    
         return view('user.index', [
             'events' => $events,
         ]);
     }
 
+    public function event()
+    {
+        $events = Event::where('status', true)->get();
+
+        foreach ($events as $event) {
+            $total = $event->registration->where("status", "approved")->count();
+            $event->totalResgist = $total;
+        }
+
+        return view('user.event', [
+            'events' => $events,
+        ]);
+    }
+    
     public function detail($slug)
     {
         $event = Event::where('slug', $slug)->first();
-
+        
         if (! $event) {
             abort(404);
         }
-
+        
         return view('user.detail-event', [
             'event' => $event,
         ]);
     }
+    
+    public function category($slug)
+    {
+        $category = Category::where("slug", $slug)->first();
+        $events  = Event::where("category_id", $category->id)->get();
 
+        return view('user.event', [
+            'events' => $events,
+        ]);
+    }
+    
     public function registEvent(Request $request)
     {
         $data = $request->validate([
@@ -63,19 +89,30 @@ class EventController extends Controller
             $final_price = $event->price;
 
             if ($coupon) {
-                if ($coupon->discount_type == "flat") {
-                    $discount = $final_price - $coupon->discount_value;
-
-                    $final_price = $discount;
+                if($coupon->open_at <= now() && $coupon->closed_at >= now()) {
+                    if ($coupon->discount_type == "flat") {
+                        $discount = $final_price - $coupon->discount_value;
+    
+                        $final_price = $discount;
+                    } else {
+                        $precentDiscount = $final_price * $coupon->discount_value / 100;
+                        $dicsount = $final_price - $precentDiscount;
+    
+                        $final_price = $dicsount;
+                    }
                 } else {
-                    $precentDiscount = $final_price * $coupon->discount_value / 100;
-                    $dicsount = $final_price - $precentDiscount;
-
-                    $final_price = $dicsount;
+                    return redirect()->back()->with("error", "Coupon melewati batas tanggal penggunaan");
                 }
             }
 
+            $code_registration = strtoupper(Str::random(10));
+            
+            while(Registration::where("code_registration", $code_registration)->exists()) {
+                $code_registration = strtoupper(Str::random(10));
+            }
+
             $data = [
+                "code_registration" => $code_registration,
                 "user_id" => $user_id,
                 "event_id" => $event->id,
                 "coupon_id" => $coupon->id ?? null,
@@ -92,15 +129,21 @@ class EventController extends Controller
             $registration = Registration::create($data);
 
             if ($registration) {
-                return redirect()->route("payment.event", $registration->id);
+                return redirect()->route("payment.event", $registration->code_registration);
             }
         } else {
-            return redirect()->route("index");
+            return redirect()->route("event");
         }
     }
 
-    public function paymentEvent(Registration $registration)
+    public function paymentEvent($code_registration)
     {
+        $registration = Registration::where("code_registration", $code_registration)->first();
+
+        if(!$registration) {
+            abort(404);
+        }
+
         return view("user.payment", [
             "registration" => $registration
         ]);
@@ -112,7 +155,7 @@ class EventController extends Controller
             "payment_proof" => "required|image|mimes:jpg,jepg,png,webp,gif,jfif|max:2048"
         ]);
 
-        $file = $request->file("payment_proof");
+        $file = $data['payment_proof'];
         $filename = time() ."-". $file->getClientOriginalName();
         $path = "images/payment/";
 
@@ -123,7 +166,7 @@ class EventController extends Controller
         ]);
 
         if($registration) {
-            return redirect()->route("index")->with("berhasil membayar");
+            return redirect()->back()->with("success", "berhasil membayar");
         }
     }
 
@@ -133,14 +176,13 @@ class EventController extends Controller
             return redirect()->route("login");
         }
         
-        $user = User::findOrFail(Auth::guard("user")->user()->id);
+        $histories = Registration::where("user_id", Auth::guard("user")->user()->id)->orderByDesc("created_at")->paginate(10);
 
         return view("user.history", [
-            "user" => $user
+            "histories" => $histories
         ]);
     }
 
-    
 
 
 
@@ -216,11 +258,11 @@ class EventController extends Controller
     //         ]);
 
     //         if ($registration) {
-    //             return redirect()->route('index')->with('success', 'berhasil daftar event');
+    //             return redirect()->route('event')->with('success', 'berhasil daftar event');
     //         }
 
     //     } else {
-    //         return redirect()->route('index')->with('error', 'quota sudah habis');
+    //         return redirect()->route('event')->with('error', 'quota sudah habis');
     //     }
     // }
 }

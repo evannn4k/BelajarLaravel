@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('category_events', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->string("slug")->unique();
-            $table->timestamps();
+        Schema::table('registrations', function (Blueprint $table) {
+            $table->string("code_registration")->unique()->nullable();
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('category_events');
+        Schema::table('registrations', function (Blueprint $table) {
+            $table->dropColumn("code_registration");
+        });
     }
 };

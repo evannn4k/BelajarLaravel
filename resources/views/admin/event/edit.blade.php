@@ -13,7 +13,7 @@
                             <h5>Mengedit event</h5>
                         </div>
                         <div class="pb-3">
-                            <label for="title" class="form-label">Title</label>
+                            <label for="title" class="form-label">Judul</label>
                             <input type="text" id="title" name="title"
                                 class="form-control @error('title') is-invalid @enderror" value="{{ $event->title }}">
                             @error('title')
@@ -23,7 +23,7 @@
                             @enderror
                         </div>
                         <div class="pb-3">
-                            <label for="description" class="form-label">Description</label>
+                            <label for="description" class="form-label">Deskripsi</label>
                             <textarea name="description" id="description" rows="10"
                                 class="form-control @error('description') is-invalid @enderror">{{ $event->description }}</textarea>
                             @error('description')
@@ -33,7 +33,7 @@
                             @enderror
                         </div>
                         <div class="pb-3">
-                            <label for="category_id" class="form-label">Category</label>
+                            <label for="category_id" class="form-label">Kategori</label>
                             <select name="category_id" id="category_id"
                                 class="form-select @error('category_id') is-invalid @enderror">
                                 @foreach ($categories as $category)
@@ -47,7 +47,7 @@
                             @enderror
                         </div>
                         <div class="pb-3">
-                            <label for="price" class="form-label">Price</label>
+                            <label for="price" class="form-label">Harga</label>
                             <input type="number" id="price" name="price"
                                 class="form-control @error('price') is-invalid @enderror" value="{{ $event->price }}">
                             @error('price')
@@ -57,7 +57,7 @@
                             @enderror
                         </div>
                         <div class="pb-3">
-                            <label for="quota" class="form-label">Quota</label>
+                            <label for="quota" class="form-label">Kuota</label>
                             <input type="number" id="quota" name="quota"
                                 class="form-control @error('quota') is-invalid @enderror" value="{{ $event->quota }}">
                             @error('quota')
@@ -124,8 +124,8 @@
                             @enderror
                         </div>
                         <div class="pb-3">
-                            <a href="{{ route('admin.event.index') }}" class="btn btn-danger">Kembali</a>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <a href="{{ route('admin.event.index') }}" class="btn btn-danger"><i class="fa fa-arrow-left"></i> Kembali</a>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-floppy-disk"></i> Simpan</button>
                         </div>
                     </form>
                 </div>

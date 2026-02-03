@@ -74,8 +74,4 @@ class EventController extends Controller
         }
     }
 
-    public function tes()
-    {
-        return "tes";
-    }
 }

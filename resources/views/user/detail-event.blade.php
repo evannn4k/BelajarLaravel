@@ -16,17 +16,17 @@
                             <div class="h3">{{ $event->title }}</div>
                             <table class="table table-borderless mt-2">
                                 <tr>
-                                    <td class="p-0">Category</td>
+                                    <td class="p-0">Kategori</td>
                                     <td class="p-0">:</td>
                                     <td class="p-0">{{ $event->category->name }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-0">Price</td>
+                                    <td class="p-0">Harga</td>
                                     <td class="p-0">:</td>
                                     <td class="p-0">Rp. {{ number_format($event->price) }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-0">Quota</td>
+                                    <td class="p-0">Kuota</td>
                                     <td class="p-0">:</td>
                                     <td class="p-0">{{ number_format($event->quota) }}</td>
                                 </tr>
@@ -75,9 +75,15 @@
                                             <input type="hidden" name="event_id" value="{{ $event->id }}">
                                             <div class="row g-3">
                                                 <div class="col-md-12">
-                                                    <label for="code" class="form-label">Coupon</label>
-                                                    <input type="text" class="form-control" name="code"
-                                                        id="code">
+                                                    <label for="code" class="form-label">Kupon</label>
+                                                    <input type="text"
+                                                        class="form-control @if(session('error')) is-invalid @endif"
+                                                        name="code" id="code">
+                                                    @if(session('error'))
+                                                        <div class="invalid-feedback">
+                                                            {{ session('error') }}
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-12">
                                                     <a href="{{ route('index') }}" class="btn btn-danger">Kembali</a>

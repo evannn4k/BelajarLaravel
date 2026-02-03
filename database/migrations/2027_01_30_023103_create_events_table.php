@@ -16,10 +16,14 @@ return new class extends Migration
             $table->string("title");
             $table->string("slug")->unique();
             $table->text("description");
-            $table->enum("category", ["5K", "10K", "Marathon"]);
+            $table->foreignId("category_id")->constrained("categories", "id");
             $table->integer("price");
             $table->integer("quota");
             $table->boolean("status");
+            $table->dateTime("event_date");
+            $table->dateTime("reg_open_at");
+            $table->dateTime("reg_close_at");
+            $table->string("image");
             $table->timestamps();
         });
     }
